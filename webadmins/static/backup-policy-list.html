@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+
+<![endif]-->
+<link href="static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+<link href="lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>空白页</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 备份管理 <span class="c-gray en">&gt;</span> 策略管理 </nav>
+<div class="cl pd-5 bg-1 bk-gray" style="background-color: white">
+  <span class="select-box l size-S" style="width: 200px">
+  <select class="select" size="1" name="demo1" id="myInput" onchange="myFunction()">
+      <option value="">全部</option>
+    <option value="数据库备份">数据库备份</option>
+    <option value="文件系统备份">文件系统备份</option>
+  </select>
+  </span>
+  <span class="r"> <a href="javascript:;" onclick="backup_policy_add('创建策略', '600', '700')" class="btn btn-success radius size-S"> 创建策略</a> </span>
+</div>
+
+<div class="pd-20">
+       <table class="table table-border table-bordered table-striped" id="myTable">
+            <thead>
+              <tr>
+                  <th>创建时间</th>
+                  <th>策略ID</th>
+                  <th>备份源主机</th>
+                  <th>备份类型</th>
+                  <th>策略</th>
+                  <th>备份源路径</th>
+                  <th>备份目标路径</th>
+                  <th>副本数量</th>
+                  <th>创建人</th>
+                  <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="t_body">
+
+            </tbody>
+          </table>
+
+
+
+    <footer class="footer mt-20">
+	<div class="container-fluid">
+		<nav> <a href="#" target="_blank">关于我们</a> <span class="pipe">|</span> <a href="#" target="_blank">联系我们</a> <span class="pipe">|</span> <a href="#" target="_blank">法律声明</a> </nav>
+		<p>Copyright &copy;2016 H-ui.net All Rights Reserved. <br>
+			<a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">京ICP备1000000号</a><br>
+		</p>
+	</div>
+</footer>
+</div>
+
+<script>
+
+
+       function myFunction() {
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("myTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+              if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              }else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+    }
+
+       function backup_policy_add(title,w,h){
+            var svc_type = document.getElementById("myInput").value;
+            if ( svc_type == "文件系统备份"){
+                var url = "backup-fs-policy-add.html"
+            }else if (svc_type == "数据库备份"){
+                var url = "backup-db-policy-add.html"
+            }else{
+                modalalertdemo("请选择应用策略的目标服务", 2000);
+                return
+            }
+	        layer_show(title,url,w,h);
+        }
+
+
+
+        function backup_policy_sched_list(line_id, title,w,h){
+           var tr = document.getElementById("tr_" + line_id).getElementsByTagName("td");
+           var p_id = tr[1].innerText;
+           var data = {"p_id": p_id};
+           $.cookie("sched_policy_id", p_id);
+           console.log(data);
+           // console.log(url);
+           layer_show(title,'backup_policy_sched_list.html',w,h);
+        }
+
+
+
+	   function modalalertdemo(msg, interval=5000){
+	    $.Huimodalalert(msg ,interval)
+    }
+
+
+</script>
+
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/util.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+
+<script>
+
+     login_acquire();
+
+
+     function t_body(msg){
+        var week = {"0": "周一", "1": "周二", "2": "周三", "3": "周四", "4": "周五", "5": "周六", "6": "周日"};
+
+
+        var jsonObj = JSON.parse(msg);
+        console.log(jsonObj);
+        var result = '' ;
+        for (var j = 0; j < jsonObj["message"].length; j++){
+              var items = jsonObj.message[j];
+
+              if ( items["svc_type"] == "fs" ){
+                  var svc_type = "<font>文件系统备份</font>"
+              }else{
+                   var svc_type = "<font>数据库备份</font>"
+              }
+            
+            var t = "<tr id=tr_" + j +">" +
+                "<td>" + format_timestamp(items["stat_time"]) + "</td><td>" + items["p_id"] +
+                "</td><td>" + items["source_addr"] + "</td><td>" + svc_type + "</td><td>" + "<a onclick='backup_policy_sched_list("+ j +"," + '"策略详情"' + "," + '900' + "," +'700' +")'><font color='#1e90ff'>策略详情</font></a>" +
+                "</td><td title='"+ items["backup_path"] +"'>" + items["backup_path"].substring(0, 12)+  "</td><td title='"+ items["backup_to_local_path"]+"'>" + items["backup_to_local_path"].substring(0, 20)+  "</td><td>" + items["copy_count"]+
+                "</td><td>" + items["createor"]+  "</td><td>" +
+                "<a title='删除' href='javascript:;' onclick='backup_policy_del(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a></td></tr>";
+                + "</td></tr>";
+
+
+            result += t;
+        }
+
+        document.getElementById("t_body").innerHTML = result;
+
+    }
+
+
+    function backup_policy_del(line_id){
+         console.log(line_id);
+         var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_POLICY_MANAGER;
+         var r = window.confirm("确认删除策略及其关联的调度任务吗?");
+
+         if ( r == true){
+               var tr = document.getElementById("tr_" + line_id).getElementsByTagName("td");
+               var p_id = tr[1].innerText;
+               var data = {"p_id": p_id};
+               console.log(data);
+               var res = ajaxDelete(url, data);
+               console.log(res);
+               var jsonObj = JSON.parse(res);
+               // modalalertdemo(jsonObj.message);
+               window.alert(jsonObj.message);
+               window.location.reload();
+
+         }
+
+    }
+
+
+     $(document).ready(function(){
+       var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_POLICY_MANAGER;
+       console.log(url);
+       var msg = ajaxGet(url);
+       console.log(msg);
+       t_body(msg);
+   });
+
+
+
+
+</script>
+
+
+</body>
+</html>

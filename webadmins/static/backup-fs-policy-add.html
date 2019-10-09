@@ -1,0 +1,433 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>添加用户 - H-ui.admin v3.1</title>
+<meta name="keywords" content="H-ui.admin v3.1,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.1，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+</head>
+<body>
+<article class="page-container">
+
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		<div class="row cl">
+			<div class="formControls col-xs-12 col-sm-9">
+				备份源服务器:
+				<span class="select-box">
+				  <select class="select" size="1" name="demo1" id="source_addr" onchange="backup_src_path_lst()">
+					<!--<option value="" selected>请选择</option>-->
+					<!--<option value="192.168.1.1">192.168.1.1</option>-->
+					<!--<option value="192.168.1.2">192.168.1.2</option>-->
+					<!--<option value="192.168.1.3">192.168.1.3</option>-->
+				  </select>
+				</span>
+
+			</div>
+		</div>
+
+		<div class="row cl">
+			<div class="formControls col-xs-12 col-sm-9">
+				备份源路径:
+				<span class="select-box">
+				  <select class="select" size="1" name="demo1" id="backup_src_path_list">
+					<!--<option value="" selected>请选择</option>-->
+					<!--<option value="192.168.1.1">192.168.1.1</option>-->
+					<!--<option value="192.168.1.2">192.168.1.2</option>-->
+					<!--<option value="192.168.1.3">192.168.1.3</option>-->
+				  </select>
+				</span>
+
+			</div>
+		</div>
+
+		<!--<div class="row cl">-->
+			<!--<div class="formControls col-xs-12 col-sm-9">-->
+				<!--备份目标路径:-->
+				<!--<span class="select-box">-->
+				  <!--<select class="select" size="1" name="demo1" id="backup_to_local_path">-->
+					<!--&lt;!&ndash;<option value="" selected>请选择</option>&ndash;&gt;-->
+					<!--&lt;!&ndash;<option value="192.168.1.1">192.168.1.1</option>&ndash;&gt;-->
+					<!--&lt;!&ndash;<option value="192.168.1.2">192.168.1.2</option>&ndash;&gt;-->
+					<!--&lt;!&ndash;<option value="192.168.1.3">192.168.1.3</option>&ndash;&gt;-->
+				  <!--</select>-->
+				<!--</span>-->
+
+			<!--</div>-->
+		<!--</div>-->
+
+		<div class="row cl">
+
+			<div class="formControls col-xs-12 col-sm-9">
+				备份周期:&nbsp;&nbsp;
+				<span class="select-box">
+					  <input type="checkbox" name="day_of_week" value="0" />周一&nbsp;
+  				 	  <input type="checkbox" name="day_of_week" value="1" />周二&nbsp;
+					  <input type="checkbox" name="day_of_week" value="2" />周三&nbsp;
+					  <input type="checkbox" name="day_of_week" value="3" />周四&nbsp;
+  				 	  <input type="checkbox" name="day_of_week" value="4" />周五&nbsp;
+					  <input type="checkbox" name="day_of_week" value="5" />周六&nbsp;
+					  <input type="checkbox" name="day_of_week" value="6" />周日&nbsp;
+					  <input type="checkbox" id="box_id" onclick="setAllNo()" />全选/全不选
+				</span>
+
+			</div>
+		</div>
+
+
+		<div class="row cl">
+			<div class="formControls col-xs-12 col-sm-9">
+				备份时间:
+				<span class="select-box" id="schedule_time">
+
+					<span id="sp_1">
+					<input name="backup_hours" onblur="JavaScript:backup_hours_value(this)" placeholder="时" type="text" class="input-text" value="" style="width: 35px">:<input name="backup_minutes" onblur="JavaScript:backup_minutes_value(this)" placeholder="分" type="text" class="input-text" value="" style="width: 35px"><input  onclick="schedule_policy_del(1)" class="btn btn-danger size-M" type="button" value="删除">&nbsp;
+					</span>
+
+
+				</span>
+				<input style="margin-top: 10px" onclick="schedule_policy_add()" id="schedule_add" class="btn btn-primary size-M radius" type="button" value="添加">
+			</div>
+		</div>
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">保留副本数：</label>
+			<div class="formControls col-xs-12 col-sm-9">
+				<span class="select-box">
+				  <select class="select" size="1" name="demo1" id="copy_count">
+					<option value="" selected>请选择</option>
+					  <option value="3">3份</option>
+					  <option value="4">4份</option>
+					<option value="5">5份</option>
+					<option value="6">6份</option>
+					  <option value="7">7份</option>
+					<option value="8">8份</option>
+					<option value="9">9份</option>
+					  <option value="10">10份</option>
+					<option value="11">11份</option>
+					<option value="12">12份</option>
+					  <option value="13">13份</option>
+					<option value="14">14份</option>
+					<option value="15">15份</option>
+				  </select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl" >
+			<div class="col-xs-12 col-sm-9 col-xs-offset-0 col-sm-offset-3">
+				<input onclick="sched_policy_add()" class="size-S btn btn-primary radius" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/util.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
+<script>
+
+
+	 login_acquire();
+
+	 function backup_hours_value(obj){
+	    console.log(obj.value);
+	    console.log(typeof obj.value);
+		 if(parseInt(obj.value) >=0 && parseInt(obj.value)<=23){
+		 }else{
+		     obj.value="";
+		     alert('请输入数字, 范围为0-23');
+		     return
+		 }
+	 }
+
+	 function backup_minutes_value(obj){
+		if(parseInt(obj.value)>=0 && parseInt(obj.value)<=59){
+		}else{
+		    obj.value="";
+			alert('请输入数字, 范围为0-59');
+			return
+		}
+
+	 }
+
+	 function setAllNo(){
+            var box = document.getElementById("box_id");
+            var loves = document.getElementsByName("day_of_week");
+            if(box.checked == false){
+                for (var i = 0; i < loves.length; i++) {
+                    loves[i].checked = false;
+                }
+            }else{
+                for (var i = 0; i < loves.length; i++) {
+                    loves[i].checked = true;
+                    }
+            }
+        }
+
+	 function schedule_policy_add(){
+	    // var htmlCode = '<input type="text" class="input-text" value="" style="width: 35px">:<input type="text" class="input-text" value="" style="width: 35px"><input class="btn btn-danger size-M" type="button" value="删除">&nbsp;'
+        // var schedule_time = document.getElementById("schedule_time");
+	    // schedule_time.append(htmlCode)
+
+		var parent = document.getElementById("schedule_time");
+		var exist_span = parent.getElementsByTagName("span");
+		console.log(exist_span);
+		console.log(exist_span.length);
+		var span_length  = exist_span.length;
+
+		var hour_input = document.createElement("input");
+		hour_input.type = "text";
+		hour_input.style.width = "35px";
+		hour_input.className = "input-text";
+		hour_input.style.marginTop = "5px";
+		hour_input.placeholder = "时";
+		hour_input.name="backup_hours";
+		hour_input.onblur = function () {
+		    JavaScript:backup_hours_value(this);
+		};
+
+
+
+		var split = document.createTextNode(":");
+
+		var minute_input =  document.createElement("input");
+		minute_input.type = "text";
+		minute_input.style.width = "35px";
+		minute_input.className = "input-text";
+		minute_input.style.marginTop = "5px";
+		minute_input.placeholder = "分";
+		minute_input.name = "backup_minutes";
+		minute_input.onblur = function (){
+		     JavaScript:backup_minutes_value(this);
+		};
+
+		var schedule_delete = document.createElement("input");
+		schedule_delete.type = "button";
+		schedule_delete.value = "删除";
+		schedule_delete.className = "btn btn-danger size-M";
+		schedule_delete.style.marginRight = "10px";
+		schedule_delete.style.marginTop = "5px";
+		schedule_delete.onclick = function () {
+			schedule_policy_del(span_length + 1)
+        };
+
+
+
+		var span = document.createElement("span");
+		span.id = "sp_"+ (exist_span.length + 1);
+
+		console.log("yyy");
+		console.log(span.id);
+		console.log("xxx");
+		span.appendChild(hour_input);
+		span.appendChild(split);
+        span.appendChild(minute_input);
+        span.appendChild(schedule_delete);
+
+		parent.appendChild(span);
+
+		//parent.insertBefore(span, schedule_add);
+		// console.log(schedule_add);
+		// parent.insertBefore(span, schedule_add);
+
+		// parent.insertBefore(hour_input, schedule_add);
+		// parent.insertBefore(split, );
+		// parent.insertBefore(minute_input);
+		// parent.insertBefore(schedulte_delete);
+
+	}
+
+	 function schedule_policy_del(line_id){
+
+
+	   var sp = "sp_" + line_id;
+	   console.log(sp);
+	   var parent = document.getElementById("schedule_time");
+	   var exist_span = parent.getElementsByTagName("span");
+	   if ( exist_span.length == 1){
+	       modalalertdemo("备份时间周期至少保留1个!", 2000);
+		   return
+	   }
+
+
+
+	   var del_span = document.getElementById(sp);
+	   parent.removeChild(del_span);
+
+
+	}
+
+	 function modalalertdemo(msg, interval=5000){
+	    $.Huimodalalert(msg ,interval)
+	 }
+
+	 function backup_source_addr(args){
+	     var msg = JSON.parse(args);
+	     console.log(msg);
+	     var tmp = [];
+         var res = '<option value="" selected>请选择</option>';
+         for (var j =0 ; j < msg.message.length; j++){
+	         var source_addr = msg["message"][j]["source_addr"];
+
+	         if (! tmp.includes(source_addr) ){
+				 tmp.push(source_addr);
+				 var line = '<option value="'  + source_addr + '">' +source_addr + '</option>';
+				 res += line;
+			 }
+		 }
+ 		document.getElementById("source_addr").innerHTML = res;
+	 }
+
+	 function backup_src_path_lst(){
+	     var source_addr = document.getElementById("source_addr").value;
+	     console.log(source_addr);
+	     var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_FS_MANAGER;
+	     var data = {"source_addr": source_addr};
+	     var res = ajaxGet_data(url, data);
+	     console.log(res);
+		 var jsonObj = JSON.parse(res);
+		 var res = '<option value="" selected>请选择</option>';
+		 for (var j = 0; j < jsonObj.message.length; j++){
+		     var t = '<option value="'  + jsonObj.message[j]['backup_to_local_path'] + '">' + jsonObj.message[j]['backup_path'] +"(" + jsonObj.message[j]["backup_to_local_path"] + ")" + '</option>';
+		     res += t;
+		 }
+		 document.getElementById("backup_src_path_list").innerHTML = res;
+	 }
+
+	 // function backup_to_local_path_lst(){
+		//  var source_addr = document.getElementById("source_addr").value;
+		//  var backup_path = document.getElementById("backup_src_path_list").value;
+     //
+     //
+     //
+     //
+	 //     console.log(source_addr);
+	 //     var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_FS_MANAGER;
+	 //     var data = {"source_addr": source_addr, "backup_path": backup_path};
+	 //     var res = ajaxGet_data(url, data);
+	 //     console.log(res);
+     //
+		//  var jsonObj = JSON.parse(res);
+		//  var res = '<option value="" selected>请选择</option>';
+		//  for (var j = 0; j < jsonObj.message.length; j++){
+		//      var t = '<option value="'  + jsonObj.message[j]['backup_to_local_path'] + '">' + jsonObj.message[j]['backup_to_local_path'] + '</option>';
+		//      res += t;
+		//  }
+		//  document.getElementById("backup_to_local_path").innerHTML = res;
+     //
+	 // }
+
+	 function sched_policy_add(){
+	     var source_addr = document.getElementById("source_addr").value;
+	     // var backup_to_local_path = document.getElementById("backup_to_local_path").value;
+	     var backup_path = document.getElementById("backup_src_path_list").value;
+
+	     console.log(source_addr);
+	     // console.log(backup_to_local_path);
+	     console.log(backup_path);
+
+	     var day_of_week_lst = [];
+	     var day_of_week = document.getElementsByName("day_of_week");
+ 		 // console.log(day_of_week);
+	     for (var j = 0; j< day_of_week.length; j++){
+	         if ( day_of_week[j].checked == true){
+	             day_of_week_lst.push(day_of_week[j].value);
+			 }
+		 }
+		 // console.log(day_of_week_lst);
+	     var day_of_week = day_of_week_lst.join(",");
+		 console.log(day_of_week);
+
+		 var copy_count = document.getElementById("copy_count").value;
+		 console.log(copy_count);
+
+		 var backup_hours_lst = document.getElementsByName("backup_hours");
+		 var backup_minutes_lst = document.getElementsByName("backup_minutes");
+
+		 console.log(backup_hours_lst);
+		 console.log(backup_minutes_lst);
+		 var backup_times = [];
+		 for (var j = 0; j < backup_hours_lst.length; j++){
+		     var t = {};
+		     var hour = backup_hours_lst[j].value;
+		     var minute = backup_minutes_lst[j].value;
+		     console.log(hour);
+		     console.log(minute);
+		     t["hour"] = hour;
+		     t["minute"] = minute;
+		     backup_times.push(t);
+		 }
+		 console.log(backup_times);
+
+
+		  if ( source_addr == ""  || day_of_week == "" || backup_times == "" || copy_count == "" || backup_path == "" ){
+		     modalalertdemo("请将必要的信息填写完整!");
+			 return
+		 }
+
+		 var data = {"source_addr": source_addr,
+		 "day_of_week": day_of_week, "backup_times": JSON.stringify(backup_times), "copy_count": copy_count,
+			 "svc_type": "fs", "backup_path": backup_path,
+		 };
+		 console.log(data);
+		 var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_POLICY_MANAGER;
+		 var res = ajaxPost(url, data);
+		 console.log(res);
+		 var jsonObj = JSON.parse(res);
+		 // modalalertdemo(jsonObj.message);
+		 window.alert(jsonObj.message);
+		 window.parent.location.reload();
+		 var index = parent.layer.getFrameIndex(window.name);
+		 parent.layer.close(index);
+
+
+
+	 }
+
+
+	 $(document).ready(function(){
+		var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_FS_MANAGER;
+		console.log(url);
+		var res = ajaxGet(url);
+		console.log(res);
+		backup_source_addr(res);
+    });
+
+
+
+</script>
+
+
+</body>
+</html>

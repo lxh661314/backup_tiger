@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>追求源自热爱</title>
+
+
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="bootstrap/css/animate.css" rel="stylesheet">
+    <link href="bootstrap/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <div>
+                <!--<img src="static/h-ui.admin/images/logo.png" style="margin-left: -18px">-->
+            </div>
+            <h3>欢迎使用XXX运维管理平台</h3>
+            <div id="error_msg"></div>
+            <form class="m-t" role="form" id="login_form" onsubmit="login(event)">
+
+                <div class="form-group">
+                    <input id="username" type="text" class="form-control" placeholder="Username" required="">
+                </div>
+                <div class="form-group">
+                    <input id="password" type="password"  class="form-control" placeholder="Password" required="">
+                </div>
+
+               <button onclick="account_login()" type="button"  class="btn btn-primary block full-width m-b">登入</button>
+
+            </form>
+            <!--<p class="m-t"> <small>运维安全组 &copy; 2017</small> </p>-->
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+        function account_login(){
+            var url = location.protocol + "//" + location.hostname + ":" + location.port + ACCOUNT_LOGIN_API;
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            if (username == "" || username == undefined || password == "" || password == undefined){
+                alert("缺少必须填写的登录信息!");
+                return
+            }
+            var data = {"um_account": username, "um_passwd": password};
+            console.log(data);
+            console.log(url);
+            var res = ajaxPost(url, data);
+            console.log(res);
+            var jsonObj = JSON.parse(res);
+            console.log(jsonObj);
+            if (jsonObj.code == 200){
+                window.open("index.html", '_self')
+            }else{
+                alert(jsonObj.message);
+
+            }
+        }
+
+
+
+    </script>
+
+    <script src="bootstrap/js/jquery-2.1.1.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+    <script type="text/javascript" src="lib/util.js"></script>
+    <script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+.ly-radioSpan{
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+.ly-containerLog,.ly-containerLog1{
+    width: 180px;
+    height: 210px;
+    float: left;
+    margin: 10px 13px;
+    border: 1px solid #e3e3e3;
+    -webkit-box-shadow: inset 0 0 rgba(91, 204, 124, 0.07), 0 0 rgba(91, 204, 124, 0.6);
+    box-shadow: inset 0 0 rgba(91, 204, 124, 0.07), 0 0 rgba(91, 204, 124, 0.6);
+}
+.ly-containerLog:hover,.ly-containerLog1:hover,.initChecked{
+    border: 1px solid #70cba0;
+    -webkit-box-shadow: inset 0 2px 4px rgba(91, 204, 124, 0.07), 0 0 8px rgba(91, 204, 124, 0.6);
+    box-shadow: inset 0 2px 4px rgba(91, 204, 124, 0.07), 0 0 8px rgba(91, 204, 124, 0.6);
+}
+.ly-mirrorName{
+    width: 80%;
+    height: 100px;
+    margin: 0 auto;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+.ly-mirrorName>img{
+    width: 90px;
+    height: auto;
+    max-width: 160px;
+    max-height: 90px;
+    margin-top: 10px;
+}
+.ly-mirrorName>h1{
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.ly-mirrorBtnCon{
+    width: 90%;
+    height: 100px;
+    margin: 0 auto;
+    text-align: center;
+}
+.ly-mirrorBtnCon>p{
+    margin-top: 40px;
+    font-size: 12px;
+    color: #999999;
+    width: 100%;
+    height: 20px;
+    overflow: hidden;
+    /*white-space: nowrap;*/
+    /*text-overflow: ellipsis;*/
+}
+.ly-mirrorBtnCon>input{
+    margin-top: 5px;
+    margin-left:10px;
+    width: 140px;
+    height: 30px;
+    color: #43c692;
+    background-color: #fff;
+    /*background-color: #369c74;*/
+    border: 1px solid #43c692;
+    border-radius: 6px;
+    outline: none;
+}
+.ly-mirrorBtnCon>input:focus{
+    border: 1px solid #eee;
+}
+.ly-mirrorBtnCon>input:hover,.initChecked>.ly-mirrorBtnCon>input{
+    background-color: #48d49d;
+    color: #fff;
+}

@@ -1,0 +1,14 @@
+[uwsgi]
+http = {address}:{uwsgi_port}
+uid = root
+gid = root
+vacuum=false
+chdir = {proj_home}
+home = {python_home}
+wsgi-file = {proj_name}/wsgi.py
+processes = 4
+threads = 8
+master = true
+socket={proj_home}/uwsgi.sock
+chmod-socket=666
+pidfile = {proj_home}/uwsgi.pid

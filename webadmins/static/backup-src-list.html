@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+
+<![endif]-->
+<link href="static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+<link href="lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>空白页</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 备份管理 <span class="c-gray en">&gt;</span> 备份源主机 </nav>
+<div class="cl pd-5 bg-1 bk-gray" style="background-color: white"><span class="l"><input   id="myInput" onkeyup="myFunction()" type="text" placeholder="请输入要查询的备份源主机IP地址.." style="width: 300px" class="input-text size-S"></span> <span class="r"> <a href="javascript:;" onclick="backup_src_add('主机托管', 'backup-src-add.html', '400', '420')" class="btn btn-success radius size-S"> 创建主机</a> </span></div>
+
+
+<div class="pd-20">
+   <table class="table table-border table-bordered table-striped" id="myTable">
+            <thead>
+              <tr>
+                <th>托管时间</th>
+                <th>备份源服务器</th>
+                <th>备份类型</th>
+                <th>rsync状态</th>
+                <th>sersync状态</th>
+                <th>xtrabackup状态</th>
+                <th>创建人</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="t_body">
+
+            </tbody>
+          </table>
+
+
+    <footer class="footer mt-20">
+	<div class="container-fluid">
+		<nav> <a href="#" target="_blank">关于我们</a> <span class="pipe">|</span> <a href="#" target="_blank">联系我们</a> <span class="pipe">|</span> <a href="#" target="_blank">法律声明</a> </nav>
+		<p>Copyright &copy;2016 H-ui.net All Rights Reserved. <br>
+			<a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">京ICP备1000000号</a><br>
+		</p>
+	</div>
+</footer>
+
+</div>
+
+
+
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/util.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+
+<script>
+
+     login_acquire();
+
+    function myFunction() {
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("myTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+              if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              }else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+    }
+
+    function backup_agent_install(line_id){
+        var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_HOST_MANAGER;
+        console.log(line_id);
+        console.log("tr_" + line_id);
+        var tr = document.getElementById("tr_" + line_id).getElementsByTagName("td");
+        var source_addr = tr[1].innerText;
+        var svc_type = tr[2].innerText;
+        //var storage_source = tr[6].innerText;
+        console.log(source_addr);
+        console.log(svc_type);
+
+        if (svc_type == "全部"){
+            var svc_type = "all"
+        }else if (svc_type == "文件系统"){
+            var svc_type = "fs"
+        }else if (svc_type == "数据库"){
+            var svc_type = "db"
+        }
+
+        var data = {"source_addr": source_addr, "svc_type": svc_type};
+        var res = ajaxPut(url, data);
+        var jsonObj = JSON.parse(res);
+        //alert(jsonObj.message);
+        modalalertdemo(jsonObj.message);
+    }
+
+    function backup_src_host_del(line_id){
+
+        var r = window.confirm("确认删除吗?");
+        if (r == true){
+
+            var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_HOST_MANAGER;
+            console.log(line_id);
+            console.log("tr_" + line_id);
+            var tr = document.getElementById("tr_" + line_id).getElementsByTagName("td");
+            console.log(tr);
+            var source_addr = tr[1].innerText;
+            // var svc_type = tr[2].innerText;
+            //var storage_source = tr[6].innerText;
+            console.log(source_addr);
+            // console.log(svc_type);
+            var data = {"source_addr": source_addr};
+            var res = ajaxDelete(url, data);
+            console.log(res);
+            var jsonObj = JSON.parse(res);
+            console.log(jsonObj);
+            console.log(jsonObj.message);
+            alert(jsonObj.message);
+            window.location.reload();
+            modalalertdemo(jsonObj.message);
+
+         }
+
+
+    }
+
+    function backup_src_add(title,url,w,h){
+	    layer_show(title,url,w,h);
+    }
+
+     function backup_src_edit(line_id, title,url,w,h){
+
+        console.log(line_id);
+        console.log("tr_" + line_id);
+        var tr = document.getElementById("tr_" + line_id).getElementsByTagName("td");
+        var source_addr = tr[1].innerText;
+        // var svc_type = tr[2].innerText;
+        //var storage_source = tr[6].innerText;
+        console.log(source_addr);
+        $.cookie("backup_src_source_addr", source_addr);
+        // console.log(svc_type);
+
+	    layer_show(title,url,w,h);
+    }
+
+    function t_body(msg){
+        console.log(123);
+        var jsonObj = JSON.parse(msg);
+        console.log(jsonObj);
+        var res = '' ;
+        for (var j = 0; j < jsonObj["message"].length; j++){
+            var items = jsonObj["message"][j];
+
+            if (items["svc_type"] == "all"){
+                var svc_type = "<font color='black'>全部</font>"
+            }else if (items["svc_type"] == "fs"){
+                var svc_type = "<font color='black'>文件系统</font>"
+            }else if (items["svc_type"] == "db"){
+                var svc_type = "<font color='black'>数据库</font>"
+            }
+
+            if (items["rsync_status"] == 1){
+                var rsync_status = "<font color='green'>已安装</font>"
+            }else if (items["rsync_status"] == 0){
+                var rsync_status = "<font color='red'>未安装</font>"
+            }else{
+                var rsync_status = "<font color='red'>未知错误</font>"
+            }
+
+             if (items["sersync_status"] == 1){
+                var sersync_status = "<font color='green'>已安装</font>"
+            }else if (items["sersync_status"] == 0){
+                var sersync_status = "<font color='red'>未安装</font>"
+            }else{
+                var sersync_status = "<font color='red'>未知错误</font>"
+            }
+
+            if (items["xtrabackup_status"] == 1){
+                var xtrabackup_status = "<font color='green'>已安装</font>"
+            }else if (items["xtrabackup_status"] == 0){
+                var xtrabackup_status = "<font color='red'>未安装</font>"
+            }else{
+                var xtrabackup_status = "<font color='red'>未知错误</font>"
+            }
+            //
+            // if (items["local_path"] == 0 || items["local_path"] == undefined || items["local_path"] == "" || items["local_path"] == "0"){
+            //     var local_path = "<font color='red'>未挂载</font>"
+            // }else{
+            //     var local_path = "<font color='black'>"+ items["local_path"] + "</font>"
+            // }
+
+
+            var t = "<tr id='tr_" + j + "'><td>" + format_timestamp(items["stat_time"]) + "</td><td>" + items['source_addr'] +
+            "</td><td>" + svc_type + "</td><td>" + rsync_status + "</td><td>" + sersync_status +
+            "</td><td>" + xtrabackup_status + "</td><td>"  + items["createor"] + "</td><td>" +
+                "<a title='安装代理' href='javascript:;' onclick='backup_agent_install("+ j +")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe62e;</i></a>\n" +
+                "<a title='修改' href='javascript:;' onclick='backup_src_edit("+ j + "," + "\"修改\", \"backup-src-edit.html\", 400, 420)' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>\n" +
+                "<a title='删除' href='javascript:;' onclick='backup_src_host_del(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a></td></tr>";
+            console.log(t);
+            res += t;
+        }
+        console.log(res);
+        document.getElementById("t_body").innerHTML = res;
+    }
+
+    $(document).ready(function(){
+		  var source_addr_url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_HOST_MANAGER;
+		  console.log(source_addr_url);
+		  var msg = ajaxGet(source_addr_url);
+		  console.log(msg);
+		  t_body(msg);
+    });
+
+
+    function modalalertdemo(msg, interval=5000){
+	    $.Huimodalalert(msg ,interval)
+    }
+
+</script>
+
+
+
+
+</body>
+</html>

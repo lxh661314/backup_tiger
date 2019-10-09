@@ -1,0 +1,186 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>添加用户 - H-ui.admin v3.1</title>
+<meta name="keywords" content="H-ui.admin v3.1,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.1，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+</head>
+<body>
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		<div class="row cl">
+			<div class="formControls col-xs-12 col-sm-9">
+
+				<span class="select-box">
+				  <select class="select" size="1" name="demo1" id="backup_src_host_list" onchange="get_backup_local_path()">
+
+				  </select>
+				</span>
+
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="formControls col-xs-12 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="请输入备份源路径" id="backup_path" name="backup_path">
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="formControls col-xs-12 col-sm-9">
+<span class="select-box">
+				  <select class="select" size="1" name="demo1" id="backup_method">
+					<option value="" selected>选择备份方式</option>
+					<option value="rsync">RSYNC</option>
+				  </select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="formControls col-xs-12 col-sm-9">
+<span class="select-box">
+				  <select class="select" size="1" name="demo1" id="backup_local_path_list">
+					<!--<option value="" selected>选择备份目标</option>-->
+					<!--<option value="1">目标一</option>-->
+					<!--<option value="2">目标二</option>-->
+					<!--<option value="3">目标三</option>-->
+				  </select>
+				</span>			</div>
+		</div>
+		<div class="row cl" >
+			<div class="col-xs-12 col-sm-9 col-xs-offset-0 col-sm-offset-3">
+				<input onclick="db_backup_submit()" class="size-S btn btn-primary radius" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/util.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本--> 
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+
+	login_acquire();
+
+	function get_backup_local_path(){
+		var url = location.protocol + "//" + location.hostname + ":" + location.port + CMDB_STORAGE_INFORMATION;
+	    console.log(url);
+		var source_addr = document.getElementById("backup_src_host_list").value;
+	    console.log(typeof source_addr);
+	    if (source_addr !== "" || source_addr !== undefined){
+	        console.log(source_addr);
+			var data = {"source_addr": source_addr};
+			var res = ajaxGet_data(url, data);
+			console.log(res);
+			var jsonObj = JSON.parse(res);
+			backup_local_path_list(jsonObj);
+		}
+	}
+
+	function backup_local_path_list(msg){
+		var message = msg["message"];
+	     var res = '<option value="" selected>备份至本地路径</option>';
+	     for (var j = 0; j< message.length; j++){
+	         console.log(message[j]['source_addr']);
+	         var t = '<option value="' + message[j]['local_path'] +  '">' +  message[j]['local_path'] +"(" + message[j]["source_addr"] + ":" + message[j]["storage_mount_path"] + ")" +  '</option>';
+		     res += t;
+	     }
+	     document.getElementById("backup_local_path_list").innerHTML = res;
+	  }
+
+	function source_addr_select(msg){
+	     var message = msg["message"];
+	     var res = '<option value="" selected>选择备份源主机</option>';
+	     for (var j = 0; j< message.length; j++){
+	         console.log(message[j]['source_addr']);
+	         var t = '<option value="' + message[j]['source_addr'] +  '">' + message[j]['source_addr'] + '</option>';
+		     res += t;
+	     }
+	     document.getElementById("backup_src_host_list").innerHTML = res;
+	  }
+
+	$(document).ready(function(){
+		var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_HOST_MANAGER;
+		console.log(url);
+		var data = {"svc_type": "fs"};
+		var res = ajaxGet_data(url, data);
+		console.log(res);
+		var jsonObj = JSON.parse(res);
+		source_addr_select(jsonObj)
+    });
+
+	function db_backup_submit(){
+		var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_FS_MANAGER;
+	    var source_addr = document.getElementById("backup_src_host_list").value;
+	    var backup_to_local_path = document.getElementById("backup_local_path_list").value;
+	    var backup_method = document.getElementById("backup_method").value;
+	    var backup_path = document.getElementById("backup_path").value;
+	    console.log(source_addr);
+	    console.log(backup_to_local_path);
+	    console.log(url);
+	    console.log(backup_method);
+	    var data = {"source_addr": source_addr, "backup_to_local_path": backup_to_local_path,
+			"backup_path": backup_path,
+			"backup_method": backup_method};
+	    console.log(data);
+
+	    if (source_addr == "" || backup_to_local_path == "" || backup_method == "" || backup_path == ""){
+	        //alert("缺少必要的参数");
+	        modalalertdemo("缺少必要的参数", 2000);
+			return
+		}
+        var res = ajaxPost(url, data);
+		console.log(url);
+		console.log(res);
+		var jsonObj = JSON.parse(res);
+		//alert(jsonObj.message);
+		// modalalertdemo(jsonObj.message);
+		window.alert(jsonObj.message);
+		window.parent.location.reload();
+		var index = parent.layer.getFrameIndex(window.name);
+		parent.layer.close(index);
+	}
+
+	function modalalertdemo(msg, interval=5000){
+	    $.Huimodalalert(msg ,interval)
+    }
+
+
+
+
+
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

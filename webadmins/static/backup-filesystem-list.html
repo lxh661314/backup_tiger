@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+
+<![endif]-->
+<link href="static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+<link href="lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>空白页</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 备份管理 <span class="c-gray en">&gt;</span> 文件系统备份 </nav>
+<div class="cl pd-5 bg-1 bk-gray" style="background-color: white"><span class="l"><input id="myInput" onkeyup="myFunction()" type="text" placeholder="按关键词查询" style="width: 300px" class="input-text size-S"></span> <span class="r"> <a href="javascript:;" onclick="backup_filesystem_add('创建任务', 'backup-filesystem-add.html', '400', '320')" class="btn btn-success radius size-S"> 创建任务</a> </span></div>
+
+<div class="pd-20">
+     <table class="table table-border table-bordered table-striped" id="myTable">
+            <thead>
+              <tr>
+                <th>托管时间</th>
+                <th>备份源服务器</th>
+                <th>备份源路径</th>
+                <th>备份目标路径</th>
+                <th>备份方式</th>
+                <th>状态</th>
+                <th>创建人</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="t_body">
+              <!--<tr>-->
+                <!--<th>2019-02-13 14:09</th>-->
+                <!--<td>192.168.1.1</td>-->
+                <!--<td>/var/lib/docker/etcd_backup_dir</td>-->
+                <!--<th>/mnt/nfs/data/var/lib/docker...</th>-->
+                <!--<td>rsync</td>-->
+                  <!--<td><font color="green">已启动</font></td>-->
+                <!--<td>terryliu</td>-->
+
+                     <!--<td class="td-manage">-->
+                         <!--<a title="开始" href="javascript:;" onclick="f3()" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe67a;</i></a>-->
+
+                     <!--<a title="安装代理" href="javascript:;" onclick="f3()" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>-->
+                     <!--<a title="修改" href="javascript:;" onclick="f1()" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>-->
+                     <!--<a title="删除" href="javascript:;" onclick="f2()" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>-->
+                   <!--</td>-->
+
+              <!--</tr>-->
+            </tbody>
+          </table>
+
+
+    <footer class="footer mt-20">
+	<div class="container-fluid">
+		<nav> <a href="#" target="_blank">关于我们</a> <span class="pipe">|</span> <a href="#" target="_blank">联系我们</a> <span class="pipe">|</span> <a href="#" target="_blank">法律声明</a> </nav>
+		<p>Copyright &copy;2016 H-ui.net All Rights Reserved. <br>
+			<a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">京ICP备1000000号</a><br>
+		</p>
+	</div>
+</footer>
+</div>
+
+
+
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/util.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+
+<script>
+
+     login_acquire();
+
+    function myFunction() {
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("myTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+              if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              }else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+    }
+
+    function backup_filesystem_add(title,url,w,h){
+	layer_show(title,url,w,h);
+    }
+
+    function t_body(msg){
+        console.log(123);
+        var jsonObj = JSON.parse(msg);
+        console.log(jsonObj);
+        var res = '' ;
+        for (var j = 0; j < jsonObj["message"].length; j++){
+            var items = jsonObj["message"][j];
+
+            if (items["backup_status"] == 1){
+                var backup_status = "<font color='green'>已启动</font>";
+                var task_action = "<a title='停止' href='javascript:;' onclick='backup_fs_stop(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6dd;</i></a>"
+
+            } else if (items["backup_status"] == 2){
+                var backup_status = "<font color='orange'>启动中</font>";
+                var task_action = "<a title='停止' href='javascript:;' onclick='backup_fs_stop(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6dd;</i></a>"
+
+            } else{
+                var backup_status = "<font color='red'>未启动</font>";
+                var task_action = "<a title='启动' href='javascript:;' onclick='backup_fs_start(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e1;</i></a>"
+            }
+
+            var t = "<tr id='tr_" + j + "'><td>" + format_timestamp(items["stat_time"]) + "</td><td>" + items['source_addr'] +
+            "</td><td>" + items["backup_path"] + "</td><td title='" + items["backup_to_local_path"] +"'>" + items["backup_to_local_path"].substring(0, 30) + "....</div></td><td>" +
+            items["backup_method"] + "</td><td>" + backup_status + "</td><td>" + items["createor"] + "</td><td>" + task_action +
+                "<a title='全量备份' href='javascript:;' onclick='backup_fs_full(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe616;</i></a>"  +
+                "<a title='删除' href='javascript:;' onclick='backup_fs_del(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a></td></tr>";
+            console.log(t);
+            res += t;
+        }
+        console.log(res);
+        document.getElementById("t_body").innerHTML = res;
+    }
+
+    function backup_fs_start(line_id){
+        var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_FS_MANAGER;
+        console.log(url);
+        console.log(line_id);
+        console.log("tr_" + line_id);
+        var tr = document.getElementById("tr_" + line_id).getElementsByTagName("td");
+        var source_addr = tr[1].innerText;
+        var backup_path = tr[2].innerText;
+        var backup_to_local_path = tr[3].title;
+        var action = "start";
+        var data = {"source_addr": source_addr, "backup_path": backup_path,
+            "backup_to_local_path": backup_to_local_path, "action": action};
+        console.log(data);
+        var res = ajaxPut(url, data);
+        console.log(res);
+        var jsonObj = JSON.parse(res);
+        console.log(jsonObj.message);
+        //alert(jsonObj.message);
+        modalalertdemo(jsonObj.message);
+
+    }
+
+    function backup_fs_stop(line_id){
+        var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_FS_MANAGER;
+        console.log(url);
+        console.log(line_id);
+        console.log("tr_" + line_id);
+        var tr = document.getElementById("tr_" + line_id).getElementsByTagName("td");
+        var source_addr = tr[1].innerText;
+        var backup_path = tr[2].innerText;
+        var backup_to_local_path = tr[3].title;
+        var action = "stop";
+        var data = {"source_addr": source_addr, "backup_path": backup_path,
+            "backup_to_local_path": backup_to_local_path, "action": action};
+        console.log(data);
+        var res = ajaxPut(url, data);
+        console.log(res);
+        var jsonObj = JSON.parse(res);
+        console.log(jsonObj.message);
+        //alert(jsonObj.message);
+        modalalertdemo(jsonObj.message);
+    }
+
+    function backup_fs_full(line_id){
+        console.log(line_id);
+        var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_FS_MANAGER;
+        console.log(url);
+        console.log(line_id);
+        console.log("tr_" + line_id);
+        var tr = document.getElementById("tr_" + line_id).getElementsByTagName("td");
+        var source_addr = tr[1].innerText;
+        var backup_path = tr[2].innerText;
+        var backup_to_local_path = tr[3].title;
+        var action = "fs_full_backup";
+        var data = {"source_addr": source_addr, "backup_path": backup_path,
+            "backup_to_local_path": backup_to_local_path, "action": action};
+        console.log(data);
+        var res = ajaxPut(url, data);
+        console.log(res);
+        var jsonObj = JSON.parse(res);
+        console.log(jsonObj.message);
+        //alert(jsonObj.message);
+        modalalertdemo(jsonObj.message);
+    }
+
+    function backup_fs_del(line_id){
+        var r = window.confirm("确定删除吗?");
+        if ( r == true ){
+            var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_FS_MANAGER;
+            console.log(url);
+            console.log(line_id);
+            console.log("tr_" + line_id);
+            var tr = document.getElementById("tr_" + line_id).getElementsByTagName("td");
+            var source_addr = tr[1].innerText;
+            var backup_path = tr[2].innerText;
+            console.log(source_addr);
+            var data = {"source_addr": source_addr, "backup_path": backup_path};
+            console.log(data);
+            var res = ajaxDelete(url, data);
+            var jsonObj = JSON.parse(res);
+            window.alert(jsonObj.message);
+            // modalalertdemo(jsonObj.message);
+            window.location.reload();
+        }
+    }
+    
+    $(document).ready(function(){
+        var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_FS_MANAGER;
+        console.log(url);
+        var res = ajaxGet(url);
+        console.log(res);
+        t_body(res);
+    });
+
+
+    function modalalertdemo(msg, interval=5000){
+	    $.Huimodalalert(msg ,interval)
+    }
+
+
+
+</script>
+</body>
+</html>

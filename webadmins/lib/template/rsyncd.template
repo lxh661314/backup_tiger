@@ -1,0 +1,11 @@
+uid = root
+gid = root
+use chroot = no
+max connections = 20
+pid file = /var/run/rsyncd.pid
+log file = /var/log/rsync.log
+lock_file = /var/run/rsync.lock
+log format = %t %a %f %b
+syslog facility = local3
+timeout = 300
+read only = no

@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+
+<![endif]-->
+<link href="static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+<link href="lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>空白页</title>
+
+
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 备份管理 <span class="c-gray en">&gt;</span> 操作历史 </nav>
+
+<div class="cl pd-5 bg-1 bk-gray" style="background-color: white">
+  <span class="select-box l size-S" style="width: 200px">
+  <select class="select" size="1" name="demo1" id="myInput" onchange="myFunction()">
+    <option value="" selected>全部</option>
+    <option value="数据库备份">数据库备份</option>
+      <option value="代理安装">代理安装</option>
+      <option value="文件系统备份启动">文件系统备份启动</option>
+      <option value="文件系统备份停止">文件系统备份停止</option>
+      <option value="文件系统全量备份">文件系统全量备份</option>
+       <option value="副本清理">副本清理</option>
+  </select>
+  </span>
+</div>
+
+
+<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title" id="modal-title">对话框标题</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body">
+				<p id="modal-body">对话框内容…</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<div class="pd-20">
+  <table class="table table-border table-bordered table-hover table-bg table-striped " id="myTable">
+            <thead>
+              <tr>
+                <th>执行时间</th>
+                <th>任务ID</th>
+                <th>备份源主机</th>
+                <th>操作类型</th>
+                <th>备份源路径</th>
+                <th>备份目标路径</th>
+                <th>任务状态</th>
+                <th>操作人</th>
+              </tr>
+            </thead>
+            <tbody id="t_body">
+
+            </tbody>
+          </table>
+
+
+    <div id="page" class="mt-20" style="text-align: center"></div>
+    <div class="mt-20"></div>
+
+
+
+    <footer class="footer mt-20">
+	<div class="container-fluid">
+		<nav> <a href="#" target="_blank">关于我们</a> <span class="pipe">|</span> <a href="#" target="_blank">联系我们</a> <span class="pipe">|</span> <a href="#" target="_blank">法律声明</a> </nav>
+		<p>Copyright &copy;2016 H-ui.net All Rights Reserved. <br>
+			<a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">京ICP备1000000号</a><br>
+		</p>
+	</div>
+</footer>
+
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/util.js"></script>
+<script type="text/javascript" src="lib/download2.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+
+<script>
+
+ login_acquire();
+
+
+    function myFunction() {
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("myTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+              if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              }else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+    }
+
+
+    function t_body(msg){
+        var result = "";
+        var js_object = JSON.parse(msg);
+        var message = js_object["message"];
+        for(var j =0; j < message.length; j++){
+            var host_map = message[j];
+            if (host_map["task_status"] == 1){
+                var task_status = "<font color='green'>成功</font>";
+            }else{
+                var task_status = "<font color='red'>失败</font>";
+            }
+
+            if (host_map["svc_type"] == "db"){
+                var svc_type = "数据库备份";
+                var backup_path = "<td style='text-align: center'>" + host_map["backup_path"] + "</td>"
+                var backup_to_local_path =  "<td title='" +  host_map["backup_to_local_path"] + "'>" + host_map["backup_to_local_path"].substring(0, 20) + "</td>"
+            }else if (host_map["svc_type"] == "start"){
+                 var svc_type = "文件系统备份启动";
+                 var backup_path = "<td style='text-align: center' title='" + host_map["backup_path"]+ "'>" + host_map["backup_path"].substring(0, 20) + "</td>";
+                 var backup_to_local_path =  "<td title='" +  host_map["backup_to_local_path"] + "'>" + host_map["backup_to_local_path"].substring(0, 20) + "</td>"
+            }else if (host_map["svc_type"] == "stop"){
+                var svc_type = "文件系统备份停止";
+                 var backup_path = "<td style='text-align: center' title='" + host_map["backup_path"]+ "'>" + host_map["backup_path"].substring(0, 20) + "</td>";
+                 var backup_to_local_path =  "<td title='" +  host_map["backup_to_local_path"] + "'>" + host_map["backup_to_local_path"].substring(0, 20) + "</td>"
+            }else if (host_map["svc_type"] == "fs_full_backup"){
+                 var svc_type = "文件系统全量备份";
+                 var backup_path = "<td style='text-align: center' title='" + host_map["backup_path"]+ "'>" + host_map["backup_path"].substring(0, 20) + "</td>";
+                 var backup_to_local_path =  "<td title='" +  host_map["backup_to_local_path"] + "'>" + host_map["backup_to_local_path"].substring(0, 20) + "</td>"
+            } else if (host_map["svc_type"] == "agent_install"){
+                var svc_type = "代理安装";
+                var backup_path = "<td></td>";
+                var backup_to_local_path = "<td></td>";
+            }
+
+            else if (host_map["svc_type"] == "duplicate_clean"){
+                var svc_type = "副本清理";
+                var backup_path = "<td></td>";
+                var backup_to_local_path = "<td></td>";
+            }
+
+            var t = "<tr id=tr_" + j +">" +
+                "<td>" + format_timestamp(host_map["stat_time"]) + "</td><td><a onclick='get_tid_message(\"" + host_map["task_id"]+ "\")'>" +host_map["task_id"] +
+                "</a></td><td>" + host_map["source_addr"] + "</td><td>" + svc_type + "</td>" + backup_path  + backup_to_local_path +
+               "<td>" + task_status + "</td><td>" + host_map["createor"]+ "</td></tr>";
+
+            console.log(t);
+            console.log(host_map);
+            result += t;
+        }
+    document.getElementById("t_body").innerHTML = result;
+    }
+
+
+    function get_tid_message(t_id){
+         var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_HISTORY_LIST + "?t_id=" + t_id;
+         console.log(url);
+         var msg = ajaxGet(url);
+         // console.log(msg);
+         var jsonObj = JSON.parse(msg);
+         // modaldemo(t_id, jsonObj.message[0].message);
+         // window.location.href="/static/robots.txt";
+         download(jsonObj.message[0].message, t_id, "text/plain");
+
+     }
+
+
+    function modaldemo(t_id, message){
+
+
+	  $("#modal-demo").modal("show");
+	  document.getElementById("modal-title").innerText = "任务ID:" + t_id;
+	  document.getElementById("modal-body").innerText = message;
+    }
+
+
+     $(document).ready(function(){
+       var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_HISTORY_LIST;
+       console.log(url);
+       var msg = ajaxGet(url);
+       console.log(msg);
+       t_body(msg);
+
+       var max_page_res = backup_history_sum_page();
+       var json_max_page = JSON.parse(max_page_res);
+       console.log(json_max_page);
+       // //
+       now_page = 1;
+       max_page =  parseInt(json_max_page.message / 20);
+       console.log(now_page);
+       console.log(max_page);
+       divPage(now_page, max_page);
+       outer = pageClick();
+
+
+   });
+
+
+     function backup_history_sum_page(){
+         var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_HISTORY_LIST;
+         var data = {"action": "calc_sum"};
+         var result = ajaxGet_data(url, data);
+         return result
+     }
+
+     function pageClick(){
+         var minPage = 1;
+         var url = location.protocol + "//" + location.hostname + ":" + location.port + BACKUP_HISTORY_LIST;
+         function changePage(action){
+            if (action == 'before') {
+                if (now_page <= minPage){
+                    var s = "now_page: " + now_page + "min_page: " + minPage + "max_page: " + max_page;
+                    console.log(s);
+                    var data = {"now_page": minPage};
+                    var msg = ajaxGet_data(url, data);
+                    t_body(msg);
+                    divPage(minPage, max_page);
+                }else{
+                    now_page = now_page - 1;
+                    var s = "now_page: " + now_page + "min_page: " + minPage + "max_page: " + max_page;
+                    console.log(s);
+                    var data = {"now_page": now_page};
+                    var msg = ajaxGet_data(url, data);
+                    t_body(msg);
+                    divPage(now_page, max_page);
+                    }
+
+            }else if (action == 'next'){
+                if (now_page >= max_page){
+                    var data = {"now_page": max_page};
+                     var s = "now_page: " + now_page + "min_page: " + minPage + "max_page: " + max_page;
+                    console.log(s);
+                    var msg = ajaxGet_data(url, data);
+                    t_body(msg);
+                    divPage(maxPage, max_page);
+                } else {
+                    now_page = now_page + 1;
+
+                    var s = "now_page: " + now_page + "min_page: " + minPage + "max_page: " + max_page;
+                    console.log(s);
+
+                    var data =  {"now_page": now_page};
+                    var msg = ajaxGet_data(url, data);
+                    t_body(msg);
+                    divPage(now_page, max_page);
+                }
+            }
+         }
+         return changePage;
+     }
+
+     function divPage(nowPage, maxPage){
+         var btn1 = '<button onclick=outer("next") type="button" class="btn btn-primary" style="float: right">下一页</button>';
+         var btn2 = '<button onclick=outer("before") type="button" class="btn btn-primary" style="float:  right">上一页</button>';
+         $("#page").html(btn1 + "第" +nowPage +"/共" + maxPage + "页" + btn2);
+         return btn1 + "<span>&nbsp;&nbsp;&nbsp;</span>" + btn2
+     }
+
+
+
+  
+</script>
+
+
+</body>
+</html>

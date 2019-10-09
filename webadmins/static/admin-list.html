@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+
+<![endif]-->
+<link href="static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+<link href="lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>用户</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统管理 <span class="c-gray en">&gt;</span> 用户管理 </nav>
+<div class="cl pd-5 bg-1 bk-gray" style="background-color: white">
+    <span class="l"><input id="myInput" onkeyup="myFunction()" type="text" placeholder="请输入要查询的UM账号.." style="width: 300px" class="input-text size-S"></span>
+  <!--<a href="javascript:;" onclick="multi_user_delete()" class="btn btn-danger radius size-S"> 批量删除</a>-->
+           <span class="r"><a class="btn btn-success size-S radius" href="javascript:;" onclick="um_account_add('添加用户','um-account-add.html','600', '500')"> 添加用户</a> </span>
+    <span class="r">禁用: <strong id="user_cancel"></strong>&nbsp;&nbsp;&nbsp; </span> <span class="r">启用: <strong id="user_inused"></strong> &nbsp; </span><span class="r">总数: <strong id="user_total"></strong> &nbsp; </span></div>
+
+<div class="pd-20">
+  <table class="table table-border table-bordered table-striped" id="myTable">
+            <thead>
+              <tr>
+                  <th>创建时间</th>
+                  <th>UM账号</th>
+                  <th>手机</th>
+                  <th>邮箱</th>
+                  <th>角色</th>
+                  <th>是否启用</th>
+                  <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="t_body">
+
+            </tbody>
+  </table>
+
+
+    <div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title">对话框标题</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body">
+				<p>对话框内容…</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+    <footer class="footer mt-20">
+	<div class="container-fluid">
+		<nav> <a href="#" target="_blank">关于我们</a> <span class="pipe">|</span> <a href="#" target="_blank">联系我们</a> <span class="pipe">|</span> <a href="#" target="_blank">法律声明</a> </nav>
+		<p>Copyright &copy;2016 H-ui.net All Rights Reserved. <br>
+			<a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">京ICP备1000000号</a><br>
+		</p>
+	</div>
+</footer>
+
+</div>
+
+<script>
+
+
+
+    function um_account_add(title,url,w,h){
+	    layer_show(title,url,w,h);
+    }
+
+
+</script>
+
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/util.js"></script>
+<script>
+
+    login_acquire();
+
+    function myFunction() {
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("myTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+              if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              }else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+    }
+
+    function t_body(msg){
+        var user_inused = 0;
+        var user_cancel = 0;
+        var result = "";
+        var js_object = JSON.parse(msg);
+        var message = js_object["message"];
+        for(var j =0; j < message.length; j++){
+            var host_map = message[j];
+            if (host_map["account_status"] == 1){
+                var user_status = "<font color='green'>已启用</font>";
+                user_inused += 1;
+                var task_action = "<a title='停止' href='javascript:;' onclick='um_account_stop(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6dd;</i></a>"
+
+            }else{
+                var user_status = "<font color='red'>已禁用</font>";
+                user_cancel += 1;
+                var task_action = "<a title='启动' href='javascript:;' onclick='um_account_start(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e1;</i></a>"
+
+            }
+
+            if (host_map["um_account"] == "admin"){
+                var action = ""
+            }else{
+                var action =
+                task_action +
+                // "<a title='修改信息' href='javascript:;' onclick='um_account_edit(\"修改密码\", \"um-account-edit.html\", 250, 350"+ ","+ j +")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6df;</i></a>\n" +
+                "<a title='删除账号' href='javascript:;' onclick='account_user_delete(" + j + ")' class='ml-5' style='text-decoration:none'><i class='Hui-iconfont'>&#xe6e2;</i></a>"
+            }
+
+            var t = "<tr id=tr_" + j +">" +
+                "<td>" + format_timestamp(host_map["create_time"]) + "</td><td>" +host_map["um_account"] +
+                "</td><td>" + host_map["mobile"] +
+                "</td><td>" + host_map["e_mail"] + "</td><td>" + host_map["um_role"] + "</td><td>" + user_status +
+                "</td><td>" + action + "</tr>";
+
+            console.log(t);
+            console.log(host_map);
+            result += t;
+        }
+    var user_total = message.length;
+    document.getElementById("t_body").innerHTML = result;
+    document.getElementById("user_total").innerText = user_total;
+    document.getElementById("user_cancel").innerText = user_cancel;
+    document.getElementById("user_inused").innerText = user_inused;
+    }
+
+    function um_account_start(line_id){
+        var url = location.protocol + "//" + location.hostname + ":" + location.port + ACCOUNT_LOGIN_INFO;
+        var r = window.confirm("确认启动该账户吗?");
+        if ( r == true ){
+            var tr = "tr_" + line_id;
+            console.log(tr);
+            var td = document.getElementById(tr).getElementsByTagName("td");
+            var um_account = td[1].innerText.trim();
+            var data = {"um_account": um_account, "action": "start"};
+            var res = ajaxPut(url, data);
+            console.log(res);
+            var jsonObj = JSON.parse(res);
+            window.alert(jsonObj.message);
+			window.location.reload();
+
+        }
+    }
+
+    function um_account_stop(line_id){
+        var url = location.protocol + "//" + location.hostname + ":" + location.port + ACCOUNT_LOGIN_INFO;
+        var r = window.confirm("确认禁用该账户吗?");
+        if ( r == true ){
+            var tr = "tr_" + line_id;
+            console.log(tr);
+            var td = document.getElementById(tr).getElementsByTagName("td");
+            var um_account = td[1].innerText.trim();
+            var data = {"um_account": um_account, "action": "stop"};
+            var res = ajaxPut(url, data);
+            console.log(res);
+            var jsonObj = JSON.parse(res);
+            window.alert(jsonObj.message);
+			window.location.reload();
+
+        }
+    }
+
+    function account_user_delete(line_id){
+        var url = location.protocol + "//" + location.hostname + ":" + location.port + ACCOUNT_LOGIN_INFO;
+        var r = window.confirm("确认删除该账号吗？");
+        if ( r == true ){
+            var tr = "tr_" + line_id;
+            console.log(tr);
+            var td = document.getElementById(tr).getElementsByTagName("td");
+            console.log(td);
+            var um_account = td[1].innerText;
+            console.log(um_account);
+            console.log("account_user_delete " + line_id);
+            var data = {"um_account": um_account};
+            var res = ajaxDelete(url, data);
+            console.log(res);
+            var jsonObj = JSON.parse(res);
+            window.alert(jsonObj.message);
+            window.location.reload();
+            // modalalertdemo(jsonObj.message);
+        }
+    }
+
+    $(document).ready(function(){
+       var url = location.protocol + "//" + location.hostname + ":" + location.port + ACCOUNT_LOGIN_INFO;
+       console.log(url);
+       var msg = ajaxGet(url);
+       console.log(msg);
+       t_body(msg);
+   });
+
+	function modalalertdemo(msg, interval=5000){
+	    $.Huimodalalert(msg ,interval)
+    }
+
+</script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> 
+</body>
+</html>
